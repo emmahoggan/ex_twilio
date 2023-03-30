@@ -23,6 +23,8 @@ defmodule ExTwilio.Api do
   # Necessary for mocks in tests
   alias __MODULE__
 
+  require Logger
+
   @type data :: map | list
 
   @doc """
@@ -68,8 +70,11 @@ defmodule ExTwilio.Api do
   def create(module, data, options \\ []) do
     data = format_data(data)
 
+    IO.inspect("formatted data: #{inspect(data)}")
+
     module
     |> Url.build_url(nil, options)
+    |> IO.inspect(label: "CONSTRUCTED URL")
     |> Api.post!(data, auth_header(options))
     |> Parser.parse(module)
   end
